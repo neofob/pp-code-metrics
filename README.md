@@ -7,12 +7,6 @@ pp-code-metrics
 Default Environment Settings
 ----------------------------
 ```
-# Input side
-SENSOR_SERVER=localhost
-SENSOR_PORT=80
-SENSOR_KEY=your_device_key
-SENSOR_API="&Stats/json"
-
 # Output side
 INFLUXDB_HOST=localhost
 INFLUXDB_PORT=8086
@@ -46,10 +40,11 @@ Sample return json from a pp-code sensor
 Workflow
 --------
 * `json-server` is used to mock the sensor server, serving the data in json format.
-* We can 
+* `influxdb` runs from this [`compose-monitor`][2] 
 
 
 __author__: *tuan t. pham*
 
+[2]: https://github.com/neofob/compose-monitor
 [1]: https://www.npmjs.com/package/json-server
 [0]: https://watchman.online/
