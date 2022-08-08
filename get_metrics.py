@@ -45,18 +45,27 @@ for node in my_config['Nodes'].keys():
     if "Garden" != node:
         continue
 
-    node_host = my_config['Nodes'][node]['Host']
-    node_port = my_config['Nodes'][node]['Port']
-    node_key = my_config['Nodes'][node]['Key']
-    node_metric_field = my_config['Nodes'][node]['Metric']
+    my_node = my_config['Nodes'][node]
+    node_host = my_node['Host']
+    node_port = my_node['Port']
+    node_key = my_node['Key']
+    node_metric_field = my_node['Metric']
     node_uri = 'http://' + node_host + ':' + str(node_port) + '/' + node_key + '&Stats/json'
     node_r = requests.get(node_uri)
     node_metrics = {}
-    node_fields = my_config['Nodes'][node]['Fields']
-    node_measurement = my_config['Nodes'][node]['Measurement']
-    for metric in node_fields.keys():
+    node_tags = my_node['Tags']
+    node_fields = my_node['Fields']
+    node_measurement = my_node['Measurement']
+    point_fields = {}
+    for metric, c_field in node_fields.items():
         node_metrics[metric] = float(node_r.json()[node_metric_field][metric][:-1])
+        point_fields[metric] = c_field['field']
+        #pp.pprint(point_fields[metric])
+        p = Point(node_measurement).field(point_fields[metric], node_metrics[metric])
+        for k,v in node_tags.items():
+            p.tag(k,v)
+        if 'Tags' in c_field:
+            for k,v in c_field['Tags'].items():
+                p.tag(k,v)
+        write_api.write(bucket=influxdb_bucket, record=p)
     pp.pprint(node_metrics)
-    # test only Temp for now
-    p = Point(node_measurement).tag("location", "Garden").field("temperature", node_metrics['Temp'])
-    write_api.write(bucket=influxdb_bucket, record=p)
