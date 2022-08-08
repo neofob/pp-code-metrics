@@ -1,0 +1,5 @@
+pyyaml
+requests
+influxdb-client[ciso]
+yamllint
+pprint

@@ -1,7 +1,7 @@
 # Default settings
 ---
 General:
-  interval: 5
+  Interval: 60
 
 InfluxDB:
   Host: localhost
@@ -23,9 +23,9 @@ InfluxDB:
 #    "Press (inHg)": "29.74"
 #  }
 #}
-# Measurement: NodeSensor
-# Tags: Location
-# Fields: temperature, Humidity, Pressure
+# Measurement: Air
+# Tags: location
+# Fields: temperature, humidity, pressure
     # field to to be used in influxdb ingestion
     # we know that we only need to chomp 1 char for now
     # (r.json()["Stats"]["Temp"][:-1]
@@ -35,33 +35,55 @@ Nodes:
     Port: 8000
     Key: '{{ b_node_key }}'
     Metric: Stats
-    Measurement: NodeSensor
-    Location: Basement
+    Measurement: Air
+    Tags:
+      location: Basement
     Fields:
       Temp:
-        field: Temperature
+        field: temperature
         chomp: true
       Humi:
-        field: Humidity
+        field: humidity
         chomp: true
       Press (inHg):
-        field: Pressure
+        field: pressure
         chomp: false
-
+  Garden:
+    Host: 192.168.1.2
+    Port: 8001
+    Key: '{{ g_node_key }}'
+    Metric: Stats
+    Measurement: Air
+    Tags:
+      location: Garden
+    Fields:
+      Temp:
+        field: temperature
+        chomp: true
+      Humi:
+        field: humidity
+        chomp: true
   Soil:
     Host: 192.168.1.2
     Port: 8004
     Key: '{{ s_node_key }}'
     Metric: Stats
-    Measurement: NodeSensor
-    Location: Soil
+    Measurement: Soil
+    Tags:
+      location: Garden
     Fields:
       Temp1:
+        Tags:
+          lot: RaisedBed
         field: temperature
         chomp: true
       Temp2:
+        Tags:
+          lot: Compost1
         field: temperature
         chomp: true
       Temp3:
+        Tags:
+          lot: Compost2
         field: temperature
         chomp: true

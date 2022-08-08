@@ -42,7 +42,7 @@ This only works for 3-sensor temperature node
 """
 
 for node in my_config['Nodes'].keys():
-    if "Soil" != node:
+    if "Garden" != node:
         continue
 
     node_host = my_config['Nodes'][node]['Host']
@@ -52,9 +52,11 @@ for node in my_config['Nodes'].keys():
     node_uri = 'http://' + node_host + ':' + str(node_port) + '/' + node_key + '&Stats/json'
     node_r = requests.get(node_uri)
     node_metrics = {}
-    for metric in node_r.json()[node_metric_field].keys():
+    node_fields = my_config['Nodes'][node]['Fields']
+    node_measurement = my_config['Nodes'][node]['Measurement']
+    for metric in node_fields.keys():
         node_metrics[metric] = float(node_r.json()[node_metric_field][metric][:-1])
     pp.pprint(node_metrics)
-    # test only Temp2 for now
-    p = Point("NodeSensor").tag("location", "Soil").field("temperature", node_metrics['Temp2'])
+    # test only Temp for now
+    p = Point(node_measurement).tag("location", "Garden").field("temperature", node_metrics['Temp'])
     write_api.write(bucket=influxdb_bucket, record=p)
