@@ -1,0 +1,67 @@
+# Default settings
+---
+General:
+  interval: 5
+
+InfluxDB:
+  Host: localhost
+  Port: 8086
+  Bucket: sensor
+  API_TOKEN: '{{ influxdb_token }}'
+  Org: neofob
+
+# A node can have more than one sensors
+# Example:
+# http://192.168.1.2:8000/NODE_KEY&Stats/json
+# {
+#  "API": {
+#    "Version": "200"
+#  },
+#  "Stats": {
+#    "Temp": "82.09F",
+#    "Humi": "38.41%",
+#    "Press (inHg)": "29.74"
+#  }
+#}
+# Measurement: NodeSensor
+# Tags: Location
+# Fields: temperature, Humidity, Pressure
+    # field to to be used in influxdb ingestion
+    # we know that we only need to chomp 1 char for now
+    # (r.json()["Stats"]["Temp"][:-1]
+Nodes:
+  Basement:
+    Host: 192.168.1.2
+    Port: 8000
+    Key: '{{ b_node_key }}'
+    Metric: Stats
+    Measurement: NodeSensor
+    Location: Basement
+    Fields:
+      Temp:
+        field: Temperature
+        chomp: true
+      Humi:
+        field: Humidity
+        chomp: true
+      Press (inHg):
+        field: Pressure
+        chomp: false
+
+  Soil:
+    Host: 192.168.1.2
+    Port: 8004
+    Key: '{{ s_node_key }}'
+    Metric: Stats
+    Measurement: NodeSensor
+    Location: Soil
+    Fields:
+      Temp1:
+        field: temperature
+        chomp: true
+      Temp2:
+        field: temperature
+        chomp: true
+      Temp3:
+        field: temperature
+        chomp: true

@@ -1,0 +1,26 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "API": {
+        "Version": "200"
+      },
+      "Stats": {
+        "Temp": "74.34F",
+        "Humi": "55.29%",
+        "Press (inHg)": "29.63"
+      }
+    },
+    {
+      "id": 2,
+      "API": {
+        "Version": "200"
+      },
+      "Stats": {
+        "Temp": "74.14F",
+        "Humi": "55.89%",
+        "Press (inHg)": "29.63"
+      }
+    }
+  ]
+}
