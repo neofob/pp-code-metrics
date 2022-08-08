@@ -42,8 +42,8 @@ This only works for 3-sensor temperature node
 """
 
 for node_k, node in my_config['Nodes'].items():
-    if "Garden" != node_k:
-        continue
+    #if "Garden" != node_k:
+    #    continue
 
     node_host = node['Host']
     node_port = node['Port']
@@ -57,12 +57,17 @@ for node_k, node in my_config['Nodes'].items():
     node_measurement = node['Measurement']
     point_fields = {}
     for metric, c_field in node_fields.items():
-        node_metrics[metric] = float(node_r.json()[node_metric_field][metric][:-1])
+        if c_field['chomp']:
+            node_metrics[metric] = float(node_r.json()[node_metric_field][metric][:-1])
+        else:
+            node_metrics[metric] = float(node_r.json()[node_metric_field][metric])
+
         point_fields[metric] = c_field['field']
         #pp.pprint(point_fields[metric])
         p = Point(node_measurement).field(point_fields[metric], node_metrics[metric])
         for k,v in node_tags.items():
             p.tag(k,v)
+        # Extra tags
         if 'Tags' in c_field:
             for k,v in c_field['Tags'].items():
                 p.tag(k,v)
