@@ -41,21 +41,20 @@ Check for field names and what not
 This only works for 3-sensor temperature node
 """
 
-for node in my_config['Nodes'].keys():
-    if "Garden" != node:
+for node_k, node in my_config['Nodes'].items():
+    if "Garden" != node_k:
         continue
 
-    my_node = my_config['Nodes'][node]
-    node_host = my_node['Host']
-    node_port = my_node['Port']
-    node_key = my_node['Key']
-    node_metric_field = my_node['Metric']
+    node_host = node['Host']
+    node_port = node['Port']
+    node_key = node['Key']
+    node_metric_field = node['Metric']
     node_uri = 'http://' + node_host + ':' + str(node_port) + '/' + node_key + '&Stats/json'
     node_r = requests.get(node_uri)
     node_metrics = {}
-    node_tags = my_node['Tags']
-    node_fields = my_node['Fields']
-    node_measurement = my_node['Measurement']
+    node_tags = node['Tags']
+    node_fields = node['Fields']
+    node_measurement = node['Measurement']
     point_fields = {}
     for metric, c_field in node_fields.items():
         node_metrics[metric] = float(node_r.json()[node_metric_field][metric][:-1])
