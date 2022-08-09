@@ -23,7 +23,6 @@ my_config = {}
 with open(config_file, "r") as file:
     my_config = yaml.safe_load(file)
 
-
 # InfluxDB
 influxdb_bucket = my_config['InfluxDB']['Bucket']
 influxdb_api_token = my_config['InfluxDB']['API_TOKEN']
@@ -31,15 +30,9 @@ influxdb_host = my_config['InfluxDB']['Host']
 influxdb_port = my_config['InfluxDB']['Port']
 influxdb_url = 'http://' + influxdb_host + ':' + str(influxdb_port)
 influxdb_org = my_config['InfluxDB']['Org']
+
 client = InfluxDBClient(url=influxdb_url, token=influxdb_api_token, org=influxdb_org)
 write_api = client.write_api(write_options=SYNCHRONOUS)
-
-"""
-TODO: iterate through "Nodes"
-for node in my_config['Nodes'].keys()
-Check for field names and what not
-This only works for 3-sensor temperature node
-"""
 
 for node_k, node in my_config['Nodes'].items():
     #if "Garden" != node_k:
@@ -65,9 +58,10 @@ for node_k, node in my_config['Nodes'].items():
         point_fields[metric] = c_field['field']
         #pp.pprint(point_fields[metric])
         p = Point(node_measurement).field(point_fields[metric], node_metrics[metric])
+        # Tags for each node
         for k,v in node_tags.items():
             p.tag(k,v)
-        # Extra tags
+        # Extra tags for each field
         if 'Tags' in c_field:
             for k,v in c_field['Tags'].items():
                 p.tag(k,v)
