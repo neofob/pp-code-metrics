@@ -32,43 +32,56 @@ influxdb_port = my_config['InfluxDB']['Port']
 influxdb_url = 'http://' + influxdb_host + ':' + str(influxdb_port)
 influxdb_org = my_config['InfluxDB']['Org']
 
-client = InfluxDBClient(url=influxdb_url, token=influxdb_api_token, org=influxdb_org)
-write_api = client.write_api(write_options=SYNCHRONOUS)
+client = None
+write_api = None
 
-for node_k, node in my_config['Nodes'].items():
-    #if "Garden" != node_k:
-    #    continue
-
-    for n_try in range(3):
-        try_again = False
-        node_host = node['Host']
-        node_port = node['Port']
-        node_key = node['Key']
-        node_metric_field = node['Metric']
-        node_uri = 'http://' + node_host + ':' + str(node_port) + '/' + node_key + '&Stats/json'
-        node_r = requests.get(node_uri)
-        if 200 != node_r.status_code:
+def getInfluxDBClient():
+    global client, write_api
+    for n in range(3):
+        try:
+            client = InfluxDBClient(url=influxdb_url, token=influxdb_api_token, org=influxdb_org)
+        except:
             time.sleep(5)
             continue
-        node_metrics = {}
-        node_tags = node['Tags']
-        node_fields = node['Fields']
-        node_measurement = node['Measurement']
+        write_api = client.write_api(write_options=SYNCHRONOUS)
+        break
+
+def getNodeMetrics(node):
+    for n_try in range(3):
+        try_again = False
+        host = node['Host']
+        port = node['Port']
+        key = node['Key']
+        metric_field = node['Metric']
+        uri = 'http://' + host + ':' + str(port) + '/' + key + '&Stats/json'
+        r = requests.get(uri)
+        if 200 != r.status_code:
+            time.sleep(5)
+            continue
+        metrics = {}
+        tags = node['Tags']
+        fields = node['Fields']
+        measurement = node['Measurement']
         point_fields = {}
-        for metric, c_field in node_fields.items():
+        for metric, c_field in fields.items():
             try:
                 if c_field['chomp']:
-                    node_metrics[metric] = float(node_r.json()[node_metric_field][metric][:-1])
+                    metrics[metric] = float(r.json()[metric_field][metric][:-1])
                 else:
-                    node_metrics[metric] = float(node_r.json()[node_metric_field][metric])
+                    metrics[metric] = float(r.json()[metric_field][metric])
             except ValueError:
-                try_gain = True
+                try_again = True
+                continue
+            # This is a nasty node bug; 0 is a valid metric
+            # However, it returns 0 sometimes
+            if 0 == metrics[metric]:
+                try_again = True
                 continue
             point_fields[metric] = c_field['field']
             #pp.pprint(point_fields[metric])
-            p = Point(node_measurement).field(point_fields[metric], node_metrics[metric])
+            p = Point(measurement).field(point_fields[metric], metrics[metric])
             # Tags for each node
-            for k,v in node_tags.items():
+            for k,v in tags.items():
                 p.tag(k,v)
             # Extra tags for each field
             if 'Tags' in c_field:
@@ -80,7 +93,18 @@ for node_k, node in my_config['Nodes'].items():
             time.sleep(5)
             continue
         else:
-            pp.pprint(node_metrics)
+            pp.pprint(metrics)
             break
 
-client.close()
+
+if __name__ == '__main__':
+    getInfluxDBClient()
+
+    if None == write_api:
+        os._exit(1)
+
+    for node_k, node in my_config['Nodes'].items():
+        #if "Garden" != node_k:
+        #    continue
+        getNodeMetrics(node)
+    client.close()
