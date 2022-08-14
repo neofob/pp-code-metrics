@@ -37,6 +37,7 @@ write_api = None
 
 def getInfluxDBClient():
     global client, write_api
+
     for n in range(3):
         try:
             client = InfluxDBClient(url=influxdb_url, token=influxdb_api_token, org=influxdb_org)
@@ -45,6 +46,8 @@ def getInfluxDBClient():
             continue
         write_api = client.write_api(write_options=SYNCHRONOUS)
         break
+    if None == write_api:
+        os._exit(1)
 
 def getNodeMetrics(node):
     for n_try in range(3):
@@ -99,9 +102,6 @@ def getNodeMetrics(node):
 
 if __name__ == '__main__':
     getInfluxDBClient()
-
-    if None == write_api:
-        os._exit(1)
 
     for node_k, node in my_config['Nodes'].items():
         #if "Garden" != node_k:
