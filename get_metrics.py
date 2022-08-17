@@ -58,8 +58,9 @@ def getNodeMetrics(node):
         metric_field = node['Metric']
         uri = 'http://' + host + ':' + str(port) + '/' + key + '&Stats/json'
         r = requests.get(uri)
+        # This is a bug of the DS18B20, I was told.
         if 200 != r.status_code:
-            time.sleep(5)
+            time.sleep(60)
             continue
         metrics = {}
         tags = node['Tags']
@@ -76,7 +77,7 @@ def getNodeMetrics(node):
                 try_again = True
                 continue
             # This is a nasty node bug; 0 is a valid metric
-            # However, it returns 0 sometimes
+            # However, it returns 0 sometimes, DS18B20 bug
             if 0 == metrics[metric]:
                 try_again = True
                 continue
@@ -93,7 +94,7 @@ def getNodeMetrics(node):
             write_api.write(bucket=influxdb_bucket, record=p)
 
         if try_again:
-            time.sleep(5)
+            time.sleep(60)
             continue
         else:
             pp.pprint(metrics)
