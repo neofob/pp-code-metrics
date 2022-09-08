@@ -50,12 +50,15 @@ def getInfluxDBClient():
         os._exit(1)
 
 def getNodeMetrics(node):
+    host = node['Host']
+    port = node['Port']
+    key = node['Key']
+    metric_field = node['Metric']
+    tags = node['Tags']
+    fields = node['Fields']
+    measurement = node['Measurement']
     for n_try in range(3):
         try_again = False
-        host = node['Host']
-        port = node['Port']
-        key = node['Key']
-        metric_field = node['Metric']
         uri = 'http://' + host + ':' + str(port) + '/' + key + '&Stats/json'
         r = requests.get(uri)
         # This is a bug of the DS18B20, I was told.
@@ -63,9 +66,6 @@ def getNodeMetrics(node):
             time.sleep(60)
             continue
         metrics = {}
-        tags = node['Tags']
-        fields = node['Fields']
-        measurement = node['Measurement']
         point_fields = {}
         for metric, c_field in fields.items():
             try:
