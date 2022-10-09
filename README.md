@@ -24,7 +24,7 @@ Sample returned json from a pp-code sensor
 
 Workflow
 --------
-First, we need to have InfluxDB` and `Grafana` run from this [`compose-monitor`][1] docker-compose.
+First, we need to have `InfluxDB` and `Grafana` run from this [`compose-monitor`][1] docker-compose.
 Then we run the shell script (or some sort of cron job) to send metric data to InfluxDB.
 ```
 # or, source my_env/bin/activate
