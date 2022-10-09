@@ -1,26 +1,11 @@
 pp-code-metrics
 ---------------
-*Send metrics from a [`pp-code`][0] sensor to InfluxDB to be visualized by Grafana*
-
-
+*Sending metrics from a [`pp-code`][0] sensor to InfluxDB to be visualized by Grafana*
 
 Default Environment Settings
 ----------------------------
-```
-# Output side
-INFLUXDB_HOST=localhost
-INFLUXDB_PORT=8086
-INFLUXDB_USER=influxdb
-INFLUXDB_PASSWORD=metrics
-```
-
-
-
-Testing
--------
-We use [`json-server`][1] to mock some data for testing.
-
-
+* See repo [`compose-monitor`][1] if you use it for InfluxDB and Grafana.
+* `CONFIG_FILE`: this must be set to your config settings, see [`sample_settings.yml`](./sample_settings.yml) for example.
 
 Sample return json from a pp-code sensor
 ----------------------------------------
@@ -39,12 +24,15 @@ Sample return json from a pp-code sensor
 
 Workflow
 --------
-* `json-server` is used to mock the sensor server, serving the data in json format.
-* `influxdb` runs from this [`compose-monitor`][2] 
-
+First, we need to have InfluxDB` and `Grafana` run from this [`compose-monitor`][1] docker-compose.
+Then we run the shell script (or some sort of cron job) to send metric data to InfluxDB.
+```
+# or, source my_env/bin/activate
+workon metrics
+nohup ./run_get_metrics.sh 2>&1 > /dev/null &
+```
 
 __author__: *tuan t. pham*
 
-[2]: https://github.com/neofob/compose-monitor
-[1]: https://www.npmjs.com/package/json-server
+[1]: https://github.com/neofob/compose-monitor
 [0]: https://watchman.online/
