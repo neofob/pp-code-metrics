@@ -7,7 +7,7 @@ Default Environment Settings
 * See repo [`compose-monitor`][1] if you use it for InfluxDB and Grafana.
 * `CONFIG_FILE`: this must be set to your config settings, see [`sample_settings.yml`](./sample_settings.yml) for example.
 
-Sample return json from a pp-code sensor
+Sample returned json from a pp-code sensor
 ----------------------------------------
 ```
 {
