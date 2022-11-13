@@ -57,9 +57,9 @@ def getNodeMetrics(node):
     tags = node['Tags']
     fields = node['Fields']
     measurement = node['Measurement']
+    uri = 'http://' + host + ':' + str(port) + '/' + key + '&Stats/json'
     for n_try in range(3):
         try_again = False
-        uri = 'http://' + host + ':' + str(port) + '/' + key + '&Stats/json'
         r = requests.get(uri)
         # This is a bug of the DS18B20, I was told.
         if 200 != r.status_code:
