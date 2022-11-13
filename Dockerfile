@@ -41,10 +41,7 @@ COPY --from=builder /opt/pp-code-metrics/metrics /opt/pp-code-metrics/metrics
 
 WORKDIR /opt/pp-code-metrics
 
-RUN . /opt/pp-code-metrics/metrics/bin/activate \
-    && apt-get autoremove -yq \
-    && apt-get autoclean \
-    && rm -fr /tmp/* /var/lib/apt/lists/*
+RUN . /opt/pp-code-metrics/metrics/bin/activate 
 
 ENV CONFIG_FILE=/etc/pp-code-metrics.yml
 
