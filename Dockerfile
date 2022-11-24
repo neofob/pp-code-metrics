@@ -37,14 +37,14 @@ RUN apt-get -yq update && apt-get dist-upgrade -yq \
 COPY ./run_get_metrics.sh /opt/pp-code-metrics
 COPY ./get_metrics.py /opt/pp-code-metrics
 COPY ./sample_settings.yml /opt/pp-code-metrics
+COPY ./sample_settings.yml.tmpl /opt/pp-code-metrics
 COPY --from=builder /opt/pp-code-metrics/metrics /opt/pp-code-metrics/metrics
 
 WORKDIR /opt/pp-code-metrics
 
-RUN . /opt/pp-code-metrics/metrics/bin/activate 
-
-ENV CONFIG_FILE=/etc/pp-code-metrics.yml
+ENV PYTHON_PATH=/opt/pp-code-metrics/metrics/bin/python3
 
 CMD  ["dockerize", \
   "-template", "/etc/pp-code-metrics.tmpl:/etc/pp-code-metrics.yml", \
-  "/opt/pp-code-metrics/run_get_metrics.sh"]
+  "/opt/pp-code-metrics/run_get_metrics.sh", \
+  "/etc/pp-code-metrics.yml"]

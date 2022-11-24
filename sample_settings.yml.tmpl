@@ -1,0 +1,89 @@
+# Default settings
+---
+General:
+  Interval: 60
+
+InfluxDB:
+  Host: localhost
+  Port: 8086
+  Bucket: sensor
+  API_TOKEN: '{{ .Env.INFLUXDB_TOKEN }}'
+  Org: neofob
+
+# A node can have more than one sensors
+# Example:
+# http://192.168.1.2:8000/NODE_KEY&Stats/json
+# {
+#  "API": {
+#    "Version": "200"
+#  },
+#  "Stats": {
+#    "Temp": "82.09F",
+#    "Humi": "38.41%",
+#    "Press (inHg)": "29.74"
+#  }
+#}
+# Measurement: Air
+# Tags: location
+# Fields: temperature, humidity, pressure
+    # field to to be used in influxdb ingestion
+    # we know that we only need to chomp 1 char for now
+    # (r.json()["Stats"]["Temp"][:-1]
+Nodes:
+  Basement:
+    Host: 192.168.1.2
+    Port: 8000
+    Key: '{{ .Env.BASEMENT_KEY }}'
+    Metric: Stats
+    Measurement: Air
+    Tags:
+      location: Basement
+    Fields:
+      Temp:
+        field: temperature
+        chomp: true
+      Humi:
+        field: humidity
+        chomp: true
+      Press (inHg):
+        field: pressure
+        chomp: false
+  Garden:
+    Host: 192.168.1.2
+    Port: 8001
+    Key: '{{ .Env.GARDEN_KEY }}'
+    Metric: Stats
+    Measurement: Air
+    Tags:
+      location: Garden
+    Fields:
+      Temp:
+        field: temperature
+        chomp: true
+      Humi:
+        field: humidity
+        chomp: true
+  Soil:
+    Host: 192.168.1.2
+    Port: 8004
+    Key: '{{ .Env.SOIL_KEY }}'
+    Metric: Stats
+    Measurement: Soil
+    Tags:
+      location: Garden
+    Fields:
+      Temp1:
+        Tags:
+          lot: RaisedBed
+        field: temperature
+        chomp: true
+      Temp2:
+        Tags:
+          lot: Compost1
+        field: temperature
+        chomp: true
+      Temp3:
+        Tags:
+          lot: Compost2
+        field: temperature
+        chomp: true

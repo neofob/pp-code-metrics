@@ -1,0 +1,11 @@
+---
+version: '3'
+
+services:
+  pp-code-metrics:
+    container_name: pp-code-metrics
+    hostname: pp-code-metrics
+    image: neofob/pp-code-metrics:latest
+    restart: always
+    volumes:
+      - ./pp-code-metrics.tmpl:/etc/pp-code-metrics.tmpl

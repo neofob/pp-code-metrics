@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -o nounset                              # Treat unset variables as an error
 
+INTERVAL=${INTERVAL:=600}
+
 while true; do
-    CONFIG_FILE=my_settings.yml ./get_metrics.py
-    sleep 600
+    ./get_metrics.py --config $1
+    sleep $INTERVAL
 done
