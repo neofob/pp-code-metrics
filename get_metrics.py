@@ -4,6 +4,7 @@ import os
 import yaml
 import pprint
 import time
+import argparse
 
 import requests
 
@@ -13,12 +14,16 @@ from influxdb_client.client.write_api import SYNCHRONOUS
 
 """
 Example:
-CONFIG_FILE=my_settings.yml ./get_metrics.py
+./get_metrics.py --config my_settings.yml
 """
 pp = pprint.PrettyPrinter(indent=2)
 
 # load config file
-config_file = os.getenv('CONFIG_FILE')
+parser = argparse.ArgumentParser()
+parser.add_argument('-c', '--config', dest='config', action='store', help='Config file', required=True)
+
+config_file = parser.parse_args().config
+
 my_config = {}
 
 with open(config_file, "r") as file:
