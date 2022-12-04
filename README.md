@@ -22,14 +22,27 @@ Sample returned json from a pp-code sensor
 }
 ```
 
+Build docker image
+------------------
+```
+docker build -t neofob/pp-code-metrics:latest .
+```
+
 Workflow
 --------
 First, we need to have `InfluxDB` and `Grafana` run from this [`compose-monitor`][1] docker-compose.
-Then we run the shell script (or some sort of cron job) to send metric data to InfluxDB.
+
+**1.Running from commandline**
 ```
-# or, source my_env/bin/activate
+nohup ./run_get_metrics.sh my_settings.yml 2>&1 > /dev/null &
+```
+**2.Running as a docker service**
+
+
+Switch to virtual env with `docker-compose` installed. All settings are in `my_settings.yml` file.
+```
 workon metrics
-nohup ./run_get_metrics.sh 2>&1 > /dev/null &
+docker-compose up -d
 ```
 
 __author__: *tuan t. pham*

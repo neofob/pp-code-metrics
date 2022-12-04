@@ -4,7 +4,9 @@ General:
   Interval: 60
 
 InfluxDB:
-  Host: localhost
+# avoid using 'localhost' when this is deployed to be used by get_metrics.py
+# running in docker container
+  Host: influx_db_host
   Port: 8086
   Bucket: sensor
   API_TOKEN: '{{ influxdb_token }}'
