@@ -38,5 +38,4 @@ COPY --from=builder /opt/pp-code-metrics/metrics /opt/pp-code-metrics/metrics
 WORKDIR /opt/pp-code-metrics
 ENV VIRT_PYTHON=/opt/pp-code-metrics/metrics/bin/python3
 
-CMD  ["/opt/pp-code-metrics/run_get_metrics.sh", \
-	"my_settings.yml"]
+CMD  ["/opt/pp-code-metrics/run_get_metrics.sh", "my_settings.yml"]
