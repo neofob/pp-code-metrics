@@ -20,15 +20,11 @@ RUN cd /opt/pp-code-metrics \
 
 FROM ubuntu:22.04 as deploy
 
-ENV DOCKERIZE_VERSION=v0.6.1
-ENV PKGS="wget python3-minimal python3-pip virtualenv" \
+ENV PKGS="python3-minimal python3-pip virtualenv" \
     DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get -yq update && apt-get dist-upgrade -yq \
     && apt-get -yq install --no-install-recommends  ${PKGS} \
-    && wget https://github.com/jwilder/dockerize/releases/download/${DOCKERIZE_VERSION}/dockerize-linux-amd64-${DOCKERIZE_VERSION}.tar.gz \
-    && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-${DOCKERIZE_VERSION}.tar.gz \
-    && rm dockerize-linux-amd64-${DOCKERIZE_VERSION}.tar.gz \
     && mkdir -p /opt/pp-code-metrics/metrics \
     && apt-get autoremove -yq \
     && apt-get autoclean \
@@ -37,14 +33,10 @@ RUN apt-get -yq update && apt-get dist-upgrade -yq \
 COPY ./run_get_metrics.sh /opt/pp-code-metrics
 COPY ./get_metrics.py /opt/pp-code-metrics
 COPY ./sample_settings.yml /opt/pp-code-metrics
-COPY ./sample_settings.yml.tmpl /opt/pp-code-metrics
 COPY --from=builder /opt/pp-code-metrics/metrics /opt/pp-code-metrics/metrics
 
 WORKDIR /opt/pp-code-metrics
+ENV VIRT_PYTHON=/opt/pp-code-metrics/metrics/bin/python3
 
-ENV PYTHON_PATH=/opt/pp-code-metrics/metrics/bin/python3
-
-CMD  ["dockerize", \
-  "-template", "/etc/pp-code-metrics.tmpl:/etc/pp-code-metrics.yml", \
-  "/opt/pp-code-metrics/run_get_metrics.sh", \
-  "/etc/pp-code-metrics.yml"]
+CMD  ["/opt/pp-code-metrics/run_get_metrics.sh", \
+	"my_settings.yml"]

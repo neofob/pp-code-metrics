@@ -8,4 +8,4 @@ services:
     image: neofob/pp-code-metrics:latest
     restart: always
     volumes:
-      - ./pp-code-metrics.tmpl:/etc/pp-code-metrics.tmpl
+      - ./my_settings.yml:/opt/pp-code-metrics/my_settings.yml
