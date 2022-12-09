@@ -25,6 +25,8 @@ Sample returned json from a pp-code sensor
 Build docker image
 ------------------
 ```
+make docker
+# or,
 docker build -t neofob/pp-code-metrics:latest .
 ```
 

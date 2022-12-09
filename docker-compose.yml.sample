@@ -1,0 +1,68 @@
+####
+# Example of monitor & pp-code-metrics containers
+---
+version: '3'
+
+services:
+  influxdb:
+    container_name: influxdb
+    hostname: influxdb
+    image: influxdb:latest
+    restart: always
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb_storage:/var/lib/influxdb2
+      - influxdb_config:/etc/influxdb2
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=${INFLUXDB_USERNAME}
+      - DOCKER_INFLUXDB_INIT_PASSWORD=${INFLUXDB_PASSWORD}
+      - DOCKER_INFLUXDB_INIT_ORG=${INFLUXDB_ORG}
+      - DOCKER_INFLUXDB_INIT_BUCKET=${INFLUXDB_BUCKET}
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUXDB_TOKEN}
+
+#  chronograf:
+#    container_name: chronograf
+#    hostname: chronograf
+#    image: chronograf:latest
+#    restart: always
+#    ports:
+#      - "8888:8888"
+#    volumes:
+#      - chronograf_storage:/var/lib/chronograf
+#    depends_on:
+#      - influxdb
+#    environment:
+#      - INFLUXDB_URL="http://influxdb:8086"
+#      - INFLUXDB_INIT_USERNAME=${INFLUXDB_USERNAME}
+#      - INFLUXDB_INIT_PASSWORD=${INFLUXDB_PASSWORD}
+  grafana:
+    container_name: grafana
+    hostname: grafana
+    image: grafana/grafana:latest
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - influxdb
+    volumes:
+      - grafana_data:/var/lib/grafana
+  pp-code-metrics:
+    container_name: pp-code-metrics
+    hostname: pp-code-metrics
+    image: neofob/pp-code-metrics:latest
+    restart: always
+    depends_on:
+      - influxdb
+    volumes:
+      - ./my_settings.yml:/opt/pp-code-metrics/my_settings.yml:ro
+volumes:
+  chronograf_storage:
+    external: true
+  influxdb_storage:
+    external: true
+  influxdb_config:
+    external: true
+  grafana_data:
+    external: true
