@@ -54,6 +54,21 @@ def getInfluxDBClient():
     if None == write_api:
         os._exit(1)
 
+
+def getMetric(r, metric, metric_field='', chomp=True):
+    if None == metric_field or '' == metric_field:
+        # Empty field (not 'Stats' for instance)
+        if chomp:
+            return float(r.json()[metric][:-1])
+        else:
+            return float(r.json()[metric])
+    else:
+        if chomp:
+            return float(r.json()[metric_field][metric][:-1])
+        else:
+            return float(r.json()[metric_field][metric])
+
+
 def getNodeMetrics(node):
     host = node['Host']
     port = node['Port']
@@ -74,10 +89,7 @@ def getNodeMetrics(node):
         point_fields = {}
         for metric, c_field in fields.items():
             try:
-                if c_field['chomp']:
-                    metrics[metric] = float(r.json()[metric_field][metric][:-1])
-                else:
-                    metrics[metric] = float(r.json()[metric_field][metric])
+                metrics[metric] = getMetric(r, metric, metric_field, c_field['chomp'])
             except ValueError:
                 try_again = True
                 continue
