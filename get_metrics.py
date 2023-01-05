@@ -69,15 +69,21 @@ def getMetric(r, metric, metric_field='', chomp=True):
             return float(r.json()[metric_field][metric])
 
 
+def getURI(protocol='http://', host='localhost', port=8080, key='', endpoint='&Stats/json'):
+    uri = protocol + host + ':' + str(port) + '/' + key + endpoint
+    return uri
+
 def getNodeMetrics(node):
     host = node['Host']
     port = node['Port']
     key = node['Key']
+    endpoint = node['Endpoint']
     metric_field = node['Metric']
     tags = node['Tags']
     fields = node['Fields']
     measurement = node['Measurement']
-    uri = 'http://' + host + ':' + str(port) + '/' + key + '&Stats/json'
+    #uri = 'http://' + host + ':' + str(port) + '/' + key + '&Stats/json'
+    uri = getURI(host=host, port=port, key=key, endpoint=endpoint)
     for n_try in range(3):
         try_again = False
         r = requests.get(uri)

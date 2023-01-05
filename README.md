@@ -7,6 +7,15 @@ Default Environment Settings
 * See repo [`compose-monitor`][1] if you use it for InfluxDB and Grafana.
 * `CONFIG_FILE`: this must be set to your config settings, see [`sample_settings.yml`](./sample_settings.yml) for example.
 
+
+URI Pattern to retrieve metrics from a websever
+-----------------------------------------------
+```
+# From get_metrics.py
+uri = protocol + host + ':' + str(port) + '/' + key + endpoint
+```
+
+
 Sample returned json from a pp-code sensor
 ----------------------------------------
 ```
@@ -49,5 +58,9 @@ docker-compose up -d
 
 __author__: *tuan t. pham*
 
+
+**Note:** The work of generalizing the endpoint and key is sponsored by [Greenfly][2] SAU LLC.
+
+[2]: https://greenfly.io
 [1]: https://github.com/neofob/compose-monitor
 [0]: https://watchman.online/

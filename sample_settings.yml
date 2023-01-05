@@ -36,6 +36,7 @@ Nodes:
     Host: 192.168.1.2
     Port: 8000
     Key: '{{ b_node_key }}'
+    Endpoint: "&Stats/json"
     Metric: Stats
     Measurement: Air
     Tags:
@@ -54,6 +55,7 @@ Nodes:
     Host: 192.168.1.2
     Port: 8001
     Key: '{{ g_node_key }}'
+    Endpoint: "&Stats/json"
     Metric: Stats
     Measurement: Air
     Tags:
@@ -69,6 +71,7 @@ Nodes:
     Host: 192.168.1.2
     Port: 8004
     Key: '{{ s_node_key }}'
+    Endpoint: "&Stats/json"
     Metric: Stats
     Measurement: Soil
     Tags:
