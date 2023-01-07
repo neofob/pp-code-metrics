@@ -92,3 +92,21 @@ Nodes:
           lot: Compost2
         field: temperature
         chomp: true
+
+# Sample of settings for temper-service
+   Temper:
+    Host: temper
+    Port: 2610
+    Key: ""
+    Endpoint: "metrics"
+    Metric: ""
+    Measurement: Air
+    Tags:
+      location: Rackspace
+    Index: 0
+    Fields:
+      internal temperature:
+        Tags:
+          lot: Rack0
+        field: temperature
+        chomp: False

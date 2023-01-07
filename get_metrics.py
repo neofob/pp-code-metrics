@@ -55,18 +55,22 @@ def getInfluxDBClient():
         os._exit(1)
 
 
-def getMetric(r, metric, metric_field='', chomp=True):
+def getMetric(r, index=None, metric='', metric_field='', chomp=True):
+    if None == index:
+        r_data = r.json()
+    else:
+        r_data = r.json()[index]
     if None == metric_field or '' == metric_field:
         # Empty field (not 'Stats' for instance)
         if chomp:
-            return float(r.json()[metric][:-1])
+            return float(r_data[metric][:-1])
         else:
-            return float(r.json()[metric])
+            return float(r_data[metric])
     else:
         if chomp:
-            return float(r.json()[metric_field][metric][:-1])
+            return float(r_data[metric_field][metric][:-1])
         else:
-            return float(r.json()[metric_field][metric])
+            return float(r_data[metric_field][metric])
 
 
 def getURI(protocol='http://', host='localhost', port=8080, key='', endpoint='&Stats/json'):
@@ -80,6 +84,10 @@ def getNodeMetrics(node):
     endpoint = node['Endpoint']
     metric_field = node['Metric']
     tags = node['Tags']
+    if 'Index' in node:
+        index = node['Index']
+    else:
+        index = None
     fields = node['Fields']
     measurement = node['Measurement']
     #uri = 'http://' + host + ':' + str(port) + '/' + key + '&Stats/json'
@@ -95,7 +103,7 @@ def getNodeMetrics(node):
         point_fields = {}
         for metric, c_field in fields.items():
             try:
-                metrics[metric] = getMetric(r, metric, metric_field, c_field['chomp'])
+                metrics[metric] = getMetric(r, index, metric, metric_field, c_field['chomp'])
             except ValueError:
                 try_again = True
                 continue
