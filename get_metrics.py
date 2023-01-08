@@ -60,22 +60,38 @@ def getMetric(r, index=None, metric='', metric_field='', chomp=True):
         r_data = r.json()
     else:
         r_data = r.json()[index]
+
+    ret_metric = 0
     if None == metric_field or '' == metric_field:
         # Empty field (not 'Stats' for instance)
         if chomp:
-            return float(r_data[metric][:-1])
+            ret_metric = float(r_data[metric][:-1])
         else:
-            return float(r_data[metric])
+            ret_metric = float(r_data[metric])
     else:
         if chomp:
-            return float(r_data[metric_field][metric][:-1])
+            ret_metric = float(r_data[metric_field][metric][:-1])
         else:
-            return float(r_data[metric_field][metric])
+            ret_metric = float(r_data[metric_field][metric])
+    return ret_metric
 
 
 def getURI(protocol='http://', host='localhost', port=8080, key='', endpoint='&Stats/json'):
+    """
+    Form the URI to send request to
+    """
     uri = protocol + host + ':' + str(port) + '/' + key + endpoint
     return uri
+
+
+def doTransform(metric, transform=None):
+    """
+    Transform the the original metric if it is defined
+    """
+    if None == transform:
+        return metric
+    # Fixed formula is ax + b for now
+    return float(transform['a']*metric + transform['b'])
 
 def getNodeMetrics(node):
     host = node['Host']
@@ -84,10 +100,12 @@ def getNodeMetrics(node):
     endpoint = node['Endpoint']
     metric_field = node['Metric']
     tags = node['Tags']
+    transform = None
+    if 'Transform' in node:
+        transform = node['Transform']
+    index = None
     if 'Index' in node:
         index = node['Index']
-    else:
-        index = None
     fields = node['Fields']
     measurement = node['Measurement']
     #uri = 'http://' + host + ':' + str(port) + '/' + key + '&Stats/json'
@@ -112,6 +130,7 @@ def getNodeMetrics(node):
             if 0 == metrics[metric]:
                 try_again = True
                 continue
+            metrics[metric] = doTransform(metrics[metric], transform)
             point_fields[metric] = c_field['field']
             #pp.pprint(point_fields[metric])
             p = Point(measurement).field(point_fields[metric], metrics[metric])
