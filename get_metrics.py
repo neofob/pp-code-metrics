@@ -86,12 +86,13 @@ def getURI(protocol='http://', host='localhost', port=8080, key='', endpoint='&S
 
 def doTransform(metric, transform=None):
     """
-    Transform the the original metric if it is defined
+    Transform the the original metric if transform coefficients are defined
     """
     if None == transform:
         return metric
     # Fixed formula is ax + b for now
-    return float(transform['a']*metric + transform['b'])
+    return float(transform.get('a', 1)*metric + transform.get('b', 0))
+
 
 def getNodeMetrics(node):
     host = node['Host']
@@ -100,12 +101,8 @@ def getNodeMetrics(node):
     endpoint = node['Endpoint']
     metric_field = node['Metric']
     tags = node['Tags']
-    transform = None
-    if 'Transform' in node:
-        transform = node['Transform']
-    index = None
-    if 'Index' in node:
-        index = node['Index']
+    transform = node.get('Transform')
+    index = node.get('Index')
     fields = node['Fields']
     measurement = node['Measurement']
     #uri = 'http://' + host + ':' + str(port) + '/' + key + '&Stats/json'
