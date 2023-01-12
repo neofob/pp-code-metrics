@@ -59,7 +59,7 @@ docker-compose up -d
 __author__: *tuan t. pham*
 
 
-**Note:** The work of generalizing the endpoint and key is sponsored by [Greenfly][2] SAU LLC.
+**Note:** The work of generalizing the endpoint, key, and Transformation is sponsored by [Greenfly SAU LLC][2].
 
 [2]: https://greenfly.io
 [1]: https://github.com/neofob/compose-monitor
