@@ -1,0 +1,104 @@
+{{ ansible_managed }}
+# Default settings
+---
+General:
+  Interval: 60
+
+InfluxDB:
+# avoid using 'localhost' when this is deployed to be used by get_metrics.py
+# running in docker container
+  Host: {{ influx_db_host }}
+  Port: 8086
+  Bucket: sensor
+  API_TOKEN: '{{ influxdb_token }}'
+  Org: neofob
+
+# A node can have more than one sensors
+# Example:
+# http://192.168.1.2:8000/NODE_KEY&Stats/json
+# {
+#  "API": {
+#    "Version": "200"
+#  },
+#  "Stats": {
+#    "Temp": "82.09F",
+#    "Humi": "38.41%",
+#    "Press (inHg)": "29.74"
+#  }
+#}
+# Measurement: Air
+# Tags: location
+# Fields: temperature, humidity, pressure
+    # field to to be used in influxdb ingestion
+    # we know that we only need to chomp 1 char for now
+    # (r.json()["Stats"]["Temp"][:-1]
+
+#<begin>------cut-here-------->
+Nodes:
+  Soil:
+    Host: 192.168.42.2
+    Port: 8080
+    Key: badbeef
+    Endpoint: "&Stats/json"
+    Metric: Stats
+    Measurement: Air
+    Tag:
+      location: Garden
+    Fields:
+      Temp1:
+        field: temperature
+        chomp: true
+        tags:
+          lot: East
+       Temp2:
+        field: temperature
+        chomp: true
+        tags:
+          lot: West
+        Temp3:
+        field: temperature
+        chomp: true
+        tags:
+          lot: South
+#</end>------cut-here-------->
+
+
+# TODO: Use some sort of dictionary squash keys into key1_key2: value
+# Then generate the output based on that
+
+# indent=0; preformatted text
+{% filter indent(width=0) %}
+Nodes:
+{% for node_name, item in Nodes.item() -%}
+  {{ node_name }}:
+    Host: {{ item.Host }}
+    Port: {{ item.Port }}
+    Key: {{ item.Key }}
+    Endpoint: {{ item.Endpoint }}
+    Metric: {{ item.Metric }}
+    Measurement: {{ item.Measurement }}
+    # You can get creative here with tags
+    # Tags applied to all Fields; "Temp", "Humi", "Press (inHg)" for example.
+    Tags:
+      # key: value
+      location: {{ item.Tags.location }}
+    # 
+    Fields:
+      # field name of sensor metrics
+      Temp1:
+        Tags:
+          lot: {{ item.Fields.Temp1.tags.lot }}
+        field: temperature
+        chomp: true
+      Temp2:
+        Tags:
+          lot: {{ item.Fields.Temp2.tags.lot }}
+        field: temperature
+        chomp: true
+      Temp3:
+        Tags:
+          lot: {{ item.Fields.Temp3.tags.lot }}
+        field: temperature
+        chomp: true
+{% endfor %}
+{% endfilter %}
