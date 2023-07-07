@@ -1,5 +1,5 @@
 ---
-version: '3'
+version: '3.7'
 
 services:
   pp-code-metrics:
@@ -9,3 +9,7 @@ services:
     restart: always
     volumes:
       - ./my_settings.yml:/opt/pp-code-metrics/my_settings.yml:ro
+    deploy:
+      resources:
+        limits:
+          memory: 32M
