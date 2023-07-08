@@ -13,3 +13,8 @@ services:
       resources:
         limits:
           memory: 32M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1M"
+        max-file: "1"
