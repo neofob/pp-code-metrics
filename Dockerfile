@@ -1,4 +1,4 @@
-FROM ubuntu:22.04 as builder
+FROM ubuntu:23.04 as builder
 LABEL maintainer "tuan t. pham" <tuan@vt.edu>
 
 ENV PKGS="python3 python3-pip python3-dev gcc virtualenv" \
@@ -18,7 +18,7 @@ RUN cd /opt/pp-code-metrics \
     && apt-get autoclean \
     && rm -fr /tmp/* /var/lib/apt/lists/*
 
-FROM ubuntu:22.04 as deploy
+FROM ubuntu:23.04 as deploy
 
 ENV PKGS="python3-minimal python3-pip virtualenv" \
     DEBIAN_FRONTEND=noninteractive

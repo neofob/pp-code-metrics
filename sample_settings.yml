@@ -1,7 +1,7 @@
 # Default settings
 ---
 General:
-  Interval: 60
+  Interval: 600
 
 InfluxDB:
 # avoid using 'localhost' when this is deployed to be used by get_metrics.py
@@ -28,9 +28,9 @@ InfluxDB:
 # Measurement: Air
 # Tags: location
 # Fields: temperature, humidity, pressure
-    # field to to be used in influxdb ingestion
-    # we know that we only need to chomp 1 char for now
-    # (r.json()["Stats"]["Temp"][:-1]
+# field to to be used in influxdb ingestion
+# we know that we only need to chomp 1 char for now
+# (r.json()["Stats"]["Temp"][:-1]
 Nodes:
   Basement:
     Host: 192.168.1.2
@@ -94,7 +94,7 @@ Nodes:
         chomp: true
 
 # Sample of settings for temper-service
-   Temper:
+  Temper:
     Host: temper
     Port: 2610
     Key: ""
