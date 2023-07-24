@@ -1,7 +1,7 @@
 FROM ubuntu:23.04 as builder
 LABEL maintainer "tuan t. pham" <tuan@vt.edu>
 
-ENV PKGS="python3 python3-pip python3-dev gcc virtualenv" \
+ENV PKGS="python3 python3-pip python3-dev gcc virtualenv wget" \
     DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get -yq update && apt-get dist-upgrade -yq \
