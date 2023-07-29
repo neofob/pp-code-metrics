@@ -35,7 +35,7 @@ COPY ./run_get_metrics.sh /opt/pp-code-metrics
 COPY ./get_metrics.py /opt/pp-code-metrics
 COPY ./sample_settings.yml /opt/pp-code-metrics
 COPY --from=builder /opt/pp-code-metrics/metrics /opt/pp-code-metrics/metrics
-COPY --from=builder /usr/bin/yq /opt/bin/yq
+COPY --from=builder /usr/bin/yq /usr/bin/yq
 
 WORKDIR /opt/pp-code-metrics
 ENV VIRT_PYTHON=/opt/pp-code-metrics/metrics/bin/python3
