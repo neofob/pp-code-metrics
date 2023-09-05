@@ -11,6 +11,7 @@ import requests
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 
+import gc
 
 """
 Example:
@@ -156,3 +157,4 @@ if __name__ == '__main__':
         #    continue
         getNodeMetrics(node)
     client.close()
+    gc.collect()
