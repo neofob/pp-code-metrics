@@ -113,7 +113,7 @@ def getNodeMetrics(node):
         r = requests.get(uri)
         # This is a bug of the DS18B20, I was told.
         if 200 != r.status_code:
-            time.sleep(60)
+            time.sleep(15)
             continue
         metrics = {}
         point_fields = {}
@@ -139,8 +139,12 @@ def getNodeMetrics(node):
             if 'Tags' in c_field:
                 for k,v in c_field['Tags'].items():
                     p.tag(k,v)
-            write_api.write(bucket=influxdb_bucket, record=p)
-
+            for i in range(3):
+                try:
+                    write_api.write(bucket=influxdb_bucket, record=p)
+                except NewConnectionError:
+                    time.sleep(5)
+                    countinue
         if try_again:
             time.sleep(60)
             continue
