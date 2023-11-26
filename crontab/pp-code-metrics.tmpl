@@ -1,0 +1,5 @@
+# Run get_metrics.py every 10 minutes
+
+#
+
+*/{{ .Env.INTERVAL }} * * * *   /opt/pp-code-metrics/run_get_metrics.sh my_settings.yml

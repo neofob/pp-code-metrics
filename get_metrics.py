@@ -142,7 +142,7 @@ def getNodeMetrics(node):
             for i in range(3):
                 try:
                     write_api.write(bucket=influxdb_bucket, record=p)
-                except NewConnectionError:
+                except ConnectionError:
                     time.sleep(5)
                     countinue
         if try_again:

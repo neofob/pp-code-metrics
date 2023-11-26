@@ -1,7 +1,8 @@
 # Default settings
 ---
 General:
-  Interval: 600
+  # It is in minutes for cron job config now
+  Interval: 10
 
 InfluxDB:
 # avoid using 'localhost' when this is deployed to be used by get_metrics.py

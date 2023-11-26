@@ -7,12 +7,14 @@ services:
     hostname: pp-code-metrics
     image: neofob/pp-code-metrics:latest
     restart: always
+    environment:
+      INTERVAL: 10
     volumes:
       - ./my_settings.yml:/opt/pp-code-metrics/my_settings.yml:ro
     deploy:
       resources:
         limits:
-          memory: 32M
+          memory: 64M
     logging:
       driver: "json-file"
       options:
