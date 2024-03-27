@@ -6,6 +6,9 @@ services:
     container_name: pp-code-metrics
     hostname: pp-code-metrics
     image: neofob/pp-code-metrics:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile
     restart: always
     environment:
       INTERVAL: 10

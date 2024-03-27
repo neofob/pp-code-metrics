@@ -36,7 +36,7 @@ Build docker image
 ```
 make docker
 # or,
-docker build -t neofob/pp-code-metrics:latest .
+docker-compose build
 ```
 
 Workflow

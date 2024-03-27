@@ -7,6 +7,7 @@ DOCKER_TAG ?=latest
 
 docker:
 	docker build -t $(DOCKER_NAME):$(DOCKER_TAG) .
+	# or, docker-compose build
 
 up:
 	docker-compose up -d
