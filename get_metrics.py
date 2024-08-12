@@ -11,8 +11,6 @@ import requests
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 
-import gc
-
 """
 Example:
 ./get_metrics.py --config my_settings.yml
@@ -144,7 +142,7 @@ def getNodeMetrics(node):
                     write_api.write(bucket=influxdb_bucket, record=p)
                 except ConnectionError:
                     time.sleep(5)
-                    countinue
+                    continue
         if try_again:
             time.sleep(60)
             continue
@@ -161,4 +159,3 @@ if __name__ == '__main__':
         #    continue
         getNodeMetrics(node)
     client.close()
-    gc.collect()
