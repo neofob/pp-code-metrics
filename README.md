@@ -39,6 +39,24 @@ make docker
 docker-compose build
 ```
 
+Tests
+-----
+The unit tests for `get_metrics.py` are in the [`tests/`](./tests) directory and are run with [`pytest`][3].
+
+Install the runtime dependencies plus pytest, then run the test suite from the repo root:
+```
+pip install -r requirements.txt
+pip install pytest
+python -m pytest tests/
+```
+
+The Python code is linted with [`ruff`][4] (PEP 8, line length 88) and validated with `py_compile`.
+
+```
+ruff check get_metrics.py tests/
+python -m py_compile get_metrics.py
+```
+
 Workflow
 --------
 First, we need to have `InfluxDB` and `Grafana` run from this [`compose-monitor`][1] docker-compose.
@@ -64,3 +82,5 @@ __author__: *tuan t. pham*
 [2]: https://greenfly.io
 [1]: https://github.com/neofob/compose-monitor
 [0]: https://watchman.online/
+[3]: https://docs.pytest.org/
+[4]: https://docs.astral.sh/ruff/

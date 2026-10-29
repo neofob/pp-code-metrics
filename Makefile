@@ -17,3 +17,8 @@ down:
 
 pause:
 	docker-compose pause
+
+test:
+	python -m pytest tests/
+	python -m py_compile get_metrics.py 
+	ruff check get_metrics.py
